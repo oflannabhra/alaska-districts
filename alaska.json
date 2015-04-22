@@ -1,0 +1,22 @@
+{
+   "layers":[
+   {
+         "id":"districts",
+         "src":"tl_2014_02_unsd.shp",
+         "attributes": ["NAME"]
+      },
+      {
+         "id":"stateBoundary",
+         "src":"cb_2013_us_state_500k.shp",
+         "filter":{
+            "NAME":"Alaska"
+         }
+      }
+   ],
+   "export":{
+      "width":10000
+   },
+   "proj":{
+      "id":"mercator"
+   }
+}
