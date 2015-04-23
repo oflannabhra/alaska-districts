@@ -2,12 +2,12 @@
    "layers":[
    {
          "id":"districts",
-         "src":"tl_2014_02_unsd.shp",
+         "src":"shapefiles/tl_2014_02_unsd.shp",
          "attributes": ["NAME"]
       },
       {
          "id":"stateBoundary",
-         "src":"cb_2013_us_state_500k.shp",
+         "src":"shapefiles/cb_2013_us_state_500k.shp",
          "filter":{
             "NAME":"Alaska"
          }
