@@ -1,33 +1,34 @@
 <html>
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
-    <script src="http://cdn.jsdelivr.net/qtip2/2.2.1/jquery.qtip.js"></script>
-    <script src="kartograph.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.1//jquery.qtip.min.css">
-
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
 </head>
 <body>
     <div id="map"></div>
 </body>
 
 <script type="text/javascript">
-    $(function() {
+var width = 1200,
+    height = 900;
 
-        $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
-        $.fn.qtip.defaults.style.def = false;
+var svg = d3.select("#map").append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
+    d3.json("ak.json", function(error, ak) {
+  if (error) return console.error(error);
+  
+  console.log(ak);
 
-        var map = kartograph.map('#map', 2000, 800);
+  // let's set our "layers" here
+  var districts = topojson.feature(ak, ak.objects.districts);
+  var boundary = topojson.feature(ak, ak.objects.alaska);
 
-        map.loadMap('https://rawgit.com/oflannabhra/alaska-districts/master/html/alaska.svg', function () {
-          map.addLayer('stateBoundary');
-          map.addLayer('districts', {
-            tooltips: function(d) {
-                return [d.name, "<p>TESTING</p>"];
-            }
-        });
-      });
-    });
+  // projection
+  var projection = d3.geo.albersUsa();
+  var path = d3.geo.path().projection(projection);
+
+  svg.append("path").datum(districts, boundary).attr("d", path);
+});
 </script>
 </html>
