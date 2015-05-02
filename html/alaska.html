@@ -1,34 +1,40 @@
 <html>
 <head>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
 </head>
 <body>
     <div id="map"></div>
 </body>
 
 <script type="text/javascript">
-var width = 1200,
-    height = 900;
+  var width = 1200, height = 900;
 
-var svg = d3.select("#map").append("svg")
+  var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-    d3.json("ak.json", function(error, ak) {
-  if (error) return console.error(error);
-  
-  console.log(ak);
+  d3.json("ak.json", function(error, ak) {
+      if (error) return console.error(error);
+
+      console.log(ak);
 
   // let's set our "layers" here
   var districts = topojson.feature(ak, ak.objects.districts);
   var boundary = topojson.feature(ak, ak.objects.alaska);
 
   // projection
-  var projection = d3.geo.albersUsa();
+  var projection = d3.geo.conicEqualArea()
+    .scale(1400)
+    .rotate([154, 0])
+    .center([0, 62])
+    .parallels([55, 65])
+    .clipExtent([[-1, -1], [width + 1, height + 1]]);
   var path = d3.geo.path().projection(projection);
 
-  svg.append("path").datum(districts, boundary).attr("d", path);
+  svg.insert("path").datum(boundary).attr("d", path);
+  svg.insert("path").datum(topojson.mesh(ak, {type: "GeometryCollection", geometries: districts}))
+  .attr("d", path);
 });
 </script>
 </html>
